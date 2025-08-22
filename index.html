@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Você aceita? 😏</title>
+  <meta name="description" content="Pedido!!!" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg1: #0ea5ea; 
+      --bg2: #7c3aed; 
+      --card: rgba(255, 255, 255, 0.12);
+      --glass: rgba(255, 255, 255, 0.5);
+      --text: #0f172a;
+      --ok: #16a34a;
+      --no: #ef4444;
+    }
+    * { box-sizing: border-box; }
+    html, body {
+      height: 100%;
+      margin: 0;
+      font-family: "Poppins", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      color: #111827;
+      background: radial-gradient(1200px 800px at 10% 10%, #ffffff11, #00000000 40%),
+                  linear-gradient(120deg, var(--bg1), var(--bg2));
+      overflow: hidden;
+    }
+    .wrap {
+      position: relative;
+      width: 100vw; height: 100vh;
+      display: grid; place-items: center;
+      padding: clamp(16px, 3vw, 40px);
+      isolation: isolate;
+    }
+    .card {
+      position: relative;
+      width: min(680px, 92vw);
+      padding: clamp(20px, 4vw, 36px);
+      border-radius: 28px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.8), rgba(255,255,255,0.65));
+      backdrop-filter: blur(8px);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.25), inset 0 1px 0 #ffffffaa;
+      text-align: center;
+    }
+    h1 { 
+      margin: 0 0 8px; 
+      font-size: clamp(26px, 4.5vw, 44px); 
+      line-height: 1.05; 
+      font-weight: 800;
+    }
+    .subtitle {
+      margin: 0 0 28px;
+      font-size: clamp(14px, 2.6vw, 18px);
+      opacity: 0.85;
+    }
+    .buttons {
+      position: relative;
+      width: 100%;
+      height: 220px;
+      margin-top: 8px;
+      display: grid;
+      place-items: center;
+    }
+    .btn {
+      position: relative;
+      border: 0;
+      padding: 16px 26px;
+      border-radius: 999px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
+      box-shadow: 0 12px 30px rgba(0,0,0,.15);
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn:active { transform: translateY(1px) scale(0.98); }
+    .btn-yes { background: #16a34a; color: white; }
+    .btn-no  { background: #ef4444; color: white; position: absolute; }
+
+    .hint { margin-top: 18px; font-size: 12px; opacity: .7; }
+
+  
+    .hearts { position:absolute; inset:0; pointer-events: none; overflow: hidden; }
+    .heart {
+      position: absolute;
+      font-size: 22px;
+      animation: floatUp 2.8s ease-in forwards;
+      filter: drop-shadow(0 6px 10px rgba(0,0,0,.2));
+    }
+    @keyframes floatUp {
+      0% { transform: translateY(10px) scale(0.8) rotate(-10deg); opacity: 0; }
+      10% { opacity: 1; }
+      100% { transform: translateY(-120vh) scale(1.4) rotate(10deg); opacity: 0; }
+    }
+
+   
+    .modal {
+      position: fixed; inset: 0; display: grid; place-items: center;
+      background: rgba(0,0,0,.45);
+      opacity: 0; pointer-events: none; transition: opacity .25s ease;
+    }
+    .modal.open { opacity: 1; pointer-events: auto; }
+    .modal .box {
+      background: white; border-radius: 24px; padding: 28px; text-align: center; width: min(520px, 92vw);
+      box-shadow: 0 30px 80px rgba(0,0,0,.35);
+    }
+    .modal h2 { margin: 0 0 8px; font-size: clamp(22px, 4vw, 32px); }
+    .modal p { margin: 0 0 18px; opacity: .8; }
+
+    
+    .blob { position: absolute; border-radius: 50%; filter: blur(40px); opacity: .5; z-index: -1; }
+    .blob.b1 { width: 220px; height: 220px; background: #34d399; top: 8%; left: 6%; }
+    .blob.b2 { width: 260px; height: 260px; background: #f472b6; bottom: 8%; right: 10%; }
+
+    
+    @media (max-width: 480px) {
+      .buttons { height: 180px; }
+      .btn { padding: 14px 20px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap" id="wrap">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+
+    <div class="card" id="card">
+      <h1>Quer sair comigo hoje? 💘</h1>
+      <p class="subtitle">Pensa bem... é uma oportunidade única 😎</p>
+
+      <div class="buttons" id="arena" aria-live="polite">
+        <button class="btn btn-yes" id="yes">Claro que sim! ✅</button>
+        <button class="btn btn-no" id="no" aria-label="Não">Não ❌</button>
+        <div class="hearts" id="hearts" aria-hidden="true"></div>
+      </div>
+
+   
+
+  <div class="modal" id="modal">
+    <div class="box">
+      <h2>Sabia que você ia aceitar! 🥳</h2>
+      <p>Te pego às <strong>00:00</strong>. Se arruma! 😉</p>
+      <button class="btn btn-yes" id="ok">Fechar</button>
+    </div>
+  </div>
+
+  <script>
+    const arena = document.getElementById('arena');
+    const btnNo = document.getElementById('no');
+    const btnYes = document.getElementById('yes');
+    const hearts = document.getElementById('hearts');
+    const modal = document.getElementById('modal');
+    const ok = document.getElementById('ok');
+
+    
+    function placeNoInitial() {
+      const a = arena.getBoundingClientRect();
+      const n = btnNo.getBoundingClientRect();
+      const x = a.width / 2 - n.width / 2 + (Math.random() * 20 - 10);
+      const y = a.height / 2 - n.height / 2 + (Math.random() * 20 - 10);
+      btnNo.style.transform = `translate(${x}px, ${y}px)`;
+    }
+
+    
+    function moveNoAway(evt) {
+      const a = arena.getBoundingClientRect();
+      const n = btnNo.getBoundingClientRect();
+
+     
+      const threatX = (evt.touches ? evt.touches[0].clientX : evt.clientX);
+      const threatY = (evt.touches ? evt.touches[0].clientY : evt.clientY);
+
+      
+      const jump = Math.max(120, Math.min(a.width, a.height) * 0.35);
+      const angle = Math.random() * Math.PI * 2;
+      let targetX = (n.left + n.width / 2) - a.left + Math.cos(angle) * jump;
+      let targetY = (n.top + n.height / 2) - a.top + Math.sin(angle) * jump;
+
+ 
+      const dx = targetX - (threatX - a.left);
+      const dy = targetY - (threatY - a.top);
+      targetX += dx * 0.2;
+      targetY += dy * 0.2;
+
+    
+      const maxX = a.width - n.width - 6;
+      const maxY = a.height - n.height - 6;
+      targetX = Math.max(6, Math.min(maxX, targetX));
+      targetY = Math.max(6, Math.min(maxY, targetY));
+
+      btnNo.style.transition = 'transform .12s ease-out';
+      btnNo.style.transform = `translate(${targetX}px, ${targetY}px)`;
+    }
+
+    function sprayHearts(count = 24) {
+      const a = arena.getBoundingClientRect();
+      for (let i = 0; i < count; i++) {
+        const h = document.createElement('div');
+        h.className = 'heart';
+        h.textContent = Math.random() < 0.6 ? '💖' : (Math.random() < 0.5 ? '💘' : '💝');
+        const x = Math.random() * a.width;
+        h.style.left = x + 'px';
+        h.style.bottom = '-20px';
+        h.style.fontSize = (18 + Math.random() * 18) + 'px';
+        h.style.animationDelay = (Math.random() * 0.5) + 's';
+        hearts.appendChild(h);
+        setTimeout(() => h.remove(), 3200);
+      }
+    }
+
+    function accept() {
+      sprayHearts(36);
+      modal.classList.add('open');
+    }
+
+ 
+    btnNo.addEventListener('mouseenter', moveNoAway);
+    btnNo.addEventListener('mousemove', moveNoAway);
+    btnNo.addEventListener('touchstart', (e) => { moveNoAway(e); e.preventDefault(); }, { passive: false });
+
+    btnYes.addEventListener('click', accept);
+    ok.addEventListener('click', () => modal.classList.remove('open'));
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('open'); });
+
+  
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(placeNoInitial, 80);
+    });
+
+  
+    placeNoInitial();
+  </script>
+</body>
+</html>
